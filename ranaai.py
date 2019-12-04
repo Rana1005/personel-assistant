@@ -5,6 +5,7 @@ import wikipedia
 import webbrowser
 # import PyAudio
 import speech_recognition as sr
+import smtplib
 # initialisation 
 engine = pyttsx3.init() 
 voices = engine.getProperty('voices')
@@ -26,6 +27,7 @@ def wishMe():
     elif hour>=18 and hour<24:
         speak("good night")
     speak("I am rana Assistant! tell me how can i help you")
+    
 
 
 def takeCommand():
@@ -46,13 +48,21 @@ def takeCommand():
         return "None"
     return query
 
+def sendEmail(to, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('rana031998atul@gmail.com', 'atul@123rana')
+    server.sendmail('rana031998atul@gmail.com', to, content)
+    server.close()
+
 
 if __name__ == "__main__":
-    # wishMe()
+    wishMe()
     while True:
         query = takeCommand().lower()
         print(query)
-        # Logic for executing tasks based on query
+    
         if 'wikipedia' in query:
             speak('Searching Wikipedia...')
             query = query.replace("wikipedia", "")
@@ -65,4 +75,14 @@ if __name__ == "__main__":
         elif 'the time' in query:
             Time = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Rana Atul, the time is {Time}")
+        elif 'email to nanda' in query:
+            try:
+                speak("Kya bhejna hai email")
+                content = takeCommand()
+                to = "rn045942@gmail.com"    
+                sendEmail(to, content)
+                speak("Email sent!")
+            except Exception as e:
+                print(e)
+                speak("Sorry some error")
     
